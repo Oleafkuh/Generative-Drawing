@@ -1,52 +1,73 @@
 
+let speedX = 5;
+let speedY = 5;
+let isMousePressed = false;
+let transparency = 255;
+
 class bez
 {
 
-  constructor(xAnch, yAnch, xCon, yCon, x2Con, y2Con, x2Anch, y2Anch, xSpeed, ySpeed, r, g, b )
+  constructor(xAnch, yAnch, xCon, yCon, x2Con, y2Con, x2Anch, y2Anch, r, g, b, xDirection,yDirection )
   {
     this.xAnch = xAnch;
-    this.yAnch = yAnch;
+    this.yAnch = 0;
     this.xCon = xCon;
     this.yCon = yCon;
     this.x2Con = x2Con;
     this.y2Con = y2Con;
     this.x2Anch = x2Anch;
     this.y2Anch = y2Anch;
-    this.xSpeed = xSpeed;
-    this.ySpeed = ySpeed;
     this.r = r;
     this.g = g;
     this.b = b;
+    this.xDirection = xDirection; 
+    this.yDirection = yDirection;
   }
 
   displayB()
   {
-    fill(this.r, this.g, this.b);
+    fill(this.r, this.g, this.b, transparency );
     bezier(this.xAnch, this.yAnch, this.xCon, this.yCon, this.x2Con, this.y2Con, this.x2Anch, this.y2Anch);
 
   }
 
   moveB()
   {
-      this.xAnch = this.xAnch + this.xSpeed;
-      this.x2Anch = this.x2Anch + this.xSpeed;
+      if(isMousePressed == false)
+      {
+        this.xAnch =this.xAnch + (speedX * this.xDirection);
+        this.x2Anch = this.x2Anch + (speedX * this.xDirection);
+        this.yAnch =this.yAnch + (speedY * this.yDirection);
+      }
+      if(isMousePressed == true)
+      {
+        this.xAnch = this.xAnch - (speedX * this.xDirection);
+        this.x2Anch = this.x2Anch - (speedX * this.xDirection);
+        this.yAnch =this.yAnch - (speedY * this.yDirection);
+      }
+      
+
+      //this.xAnch = this.xAnch + speedX;
+      //this.x2Anch = this.x2Anch + speedX;
       if((this.xAnch > windowWidth || this.xAnch < 0) || (this.x2Anch > windowWidth || this.x2Anch < 0))
       {
-          this.xSpeed *= -1;
-          this.r -= 15;
+          this.xDirection *= -1;
+          /*this.r -= 15;
           this.b -=15;
           this.g -= 15;
+          */
 
-          fr +=10;
+        
 
       }
-
-      this.yAnch = this.yAnch + this.ySpeed;
+      
+      
+     
       
       if((this.yAnch > windowHeight || this.yAnch < 0) || (this.y2Anch > windowHeight || this.y2Anch < 0))
       {
-          this.ySpeed *= -1;
-
+        
+        this.yDirection *= -1;
       }
       
       
@@ -104,48 +125,6 @@ class ball
 }
 
 
-class Block
-{
-  constructor(x, y, width, height, speedX, speedY, clr)
-  {
-
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.speedX = speedX;
-    this.speedY = speedY; 
-    this.clr = clr;
-
-  }
-
-    display() 
-  {
-    fill(255);
-    rect(this.x, this.y, this.width, this.height);
-  
-    
-  }
-
-  move()
-  {
-    this.x = this.x + this.speedX;
-    if(this.x > (windowWidth - this.width) || this.x <= 0)
-    {
-      this.speedX = this.speedX * -1;
-
-    }
-    this.y = this.y + this.speedY;
-    if(this.y > (windowHeight - this.height) || this.y <= 0)
-    {
-
-      this.speedY = this.speedY * -1;
-    }
-
-  }
-
-}
-
 
 
 
@@ -156,7 +135,7 @@ j = 0;
 let num = 100;
 for(j; j < num; j++)
 {
-  many[j] = new bez(j*2, j*3, 1, 100, 100, 1, j+100, j+150, 5, 5, 142, 125, 190);
+  many[j] = new bez(j*2, j*3, 1, 100, 100, 1, j*2, j*3,142, 125, 190, 1, 1);
 }
 
 let curves = [];
@@ -164,24 +143,26 @@ m = 0;
 let nums = 100;
 for(m; m < nums; m++)
 {
-  curves[m] = new bez(j*3, j*4, 800, 10, 600, 40, j*2, j*3, 7, 6, 241, 227, 211);
+  curves[m] = new bez(m*2, m*3, 800, 10, 600, 40, m*2, m*3, 241, 227, 211,1, 1);
 }
 
 let fr = 60;
 
-let bb = new bez(200, 80, 900, 500, 700, 400, 300, 700, 4, 5, 153, 193, 185);
-let tree = new bez(900, 90, 30, 500, 500, 30, 100, 500, 3, 2, 242, 208, 169);
-let air = new bez(10, 50, 500, 80, 80, 500, 50, 10, 2, 3, 216, 140, 154);
+let bb = new bez(300, 200, 1400, 1800, 1500, 888, 200, 300, 153, 193, 185,1, 1);
+let tree = new bez(200, 100, 30, 1300, 700, 1400, 800, 200,  242, 208, 169,1, 1);
+let air = new bez(100, 0, 1500, 100, 1540, 150, 0, 100, 216, 140, 154,1, 1);
 
 
 let crcl = new ball(100, 100, 100, 50, 2, 3, 10, 10, 10);
-let b1 = new bez(300, 400, 1, 100, 100, 1, 600, 500, 10, 10);
+let b1 = new bez(400, 300, 1500, 800, 1400, 850, 500, 600, 10, 10,1, 1);
+let low = new bez(50, 400, 80, 700, 90, 750, 100, 500, 255, 255, 255, 1, 1 );
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
     //top left is (0,0) origin point 
     
     frameRate(fr);
+   
 
   }
   
@@ -189,6 +170,30 @@ function setup() {
 
   function draw() {
     background(0);
+
+    if (mouseIsPressed == true) {
+
+      isMousePressed = true;
+      speedX = 1;
+      speedY = 1;
+      transparency = 100;
+    } 
+    else
+    {
+      isMousePressed = false; 
+      speedX = 20;
+      speedY = 20;
+      transparency = 255;
+    }
+
+    air.displayB();
+    air.moveB();
+    for(k = 0; k < nums; k++)
+    {
+      curves[k].displayB();
+      curves[k].moveB();
+  
+    }
     
     for(i = 0; i < num; i++){
 
@@ -197,23 +202,24 @@ function setup() {
      }
 
 
+   
+     low.displayB();
     bb.displayB();
     tree.displayB();
-    air.displayB();
+
+
+    low.moveB();
     bb.moveB();
+    
+
     tree.moveB();
-    air.moveB();
-  
+
+
 
   
    
   
-  for(k = 0; k < nums; k++)
-  {
-    curves[k].displayB();
-    curves[k].moveB();
-
-  }
+ 
 
   
     
